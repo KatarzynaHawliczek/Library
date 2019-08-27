@@ -1,32 +1,28 @@
 package data;
 
+import java.time.LocalDate;
+
 public class Magazine extends Publication
 {
 	private static final long serialVersionUID = 2061400934707882805L;
-	private int month;
-	private int day;
 	private String language;
 	
 	public int getMonth()
 	{
-		return month;
+		return getDate().getMonthValue();
 	}
-	public void setMonth(int month)
-	{
-		this.month = month;
-	}
+	
 	public int getDay()
 	{
-		return day;
+		return getDate().getDayOfMonth();
 	}
-	public void setDay(int day)
-	{
-		this.day = day;
-	}
+	
+	
 	public String getLanguage()
 	{
 		return language;
 	}
+	
 	public void setLanguage(String language)
 	{
 		this.language = language;
@@ -36,8 +32,7 @@ public class Magazine extends Publication
 	{
 		super(year, title, publisher);
 		setLanguage(language);
-		setMonth(month);
-		setDay(day);
+		setDate(LocalDate.of(year, month, day));
 	}
 	
 	@Override
@@ -57,25 +52,23 @@ public class Magazine extends Publication
 		print.append(getLanguage());
 		return print.toString();
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + day;
 		result = prime * result + ((language == null) ? 0 : language.hashCode());
-		result = prime * result + month;
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(this == obj)
 		{
 			return true;
-		}	
+		}
 		if(!super.equals(obj))
 		{
 			return false;
@@ -84,26 +77,18 @@ public class Magazine extends Publication
 		{
 			return false;
 		}
-		Magazine other = (Magazine) obj;
-		if(day != other.day)
-		{
-			return false;
-		}
+		Magazine other = (Magazine)obj;
 		if(language == null)
 		{
 			if(other.language != null)
 			{
 				return false;
-			}	
+			}
 		}
 		else if(!language.equals(other.language))
 		{
 			return false;
 		}
-		if(month != other.month)
-		{
-			return false;
-		}		
 		return true;
 	}
 }
