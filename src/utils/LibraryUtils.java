@@ -1,73 +1,35 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import data.Book;
 import data.Library;
-import data.LibraryUser;
 import data.Magazine;
-import data.Publication;
 
 public class LibraryUtils
 {	
 	public static void printBooks(Library lib)
 	{
-		List<Publication> publications = new ArrayList<>();
-		publications.addAll(lib.getPublications().values());
-		Collections.sort(publications, new Library.AlphabeticalComparator());
-		int countBooks = 0;
-		for(Publication p: publications)
-		{
-			if(p instanceof Book)
-			{
-				System.out.println(p);
-				countBooks++;
-			}
-		}
-		if(countBooks == 0)
-		{
-			System.out.println("Brak ksi¹¿ek w bibliotece");
-		}
+		printPublications(lib, Book.class);
 	}
 	
 	public static void printMagazines(Library lib)
 	{
-		List<Publication> publications = new ArrayList<>();
-		publications.addAll(lib.getPublications().values());
-		Collections.sort(publications, new Library.AlphabeticalComparator());
-		int countMagazines = 0;
-		for(Publication p: publications)
+		printPublications(lib, Magazine.class);
+	}
+	
+	private static void printPublications(Library lib, Class cl)
+	{
+		long countPublications = lib.getPublications().values().stream().filter(cl::isInstance)
+				.sorted(new Library.AlphabeticalComparator()).peek(System.out::println).count();
+		
+		if(countPublications == 0)
 		{
-			if(p instanceof Magazine)
-			{
-				System.out.println(p);
-				countMagazines++;
-			}
-		}
-		if(countMagazines == 0)
-		{
-			System.out.println("Brak magazynów w bibliotece");
+			System.out.println("W bibliotece nie znaleziono publikacji typu " + cl.getSimpleName());
 		}
 	}
 	
 	public static void printUsers(Library lib)
 	{
-		List<LibraryUser> users = new ArrayList<>();
-		users.addAll(lib.getUsers().values());
-		Collections.sort(users, new Comparator<LibraryUser>()
-				{
-					@Override
-					public int compare(LibraryUser o1, LibraryUser o2)
-					{
-						return o1.getLastName().compareTo(o2.getLastName());
-					}
-				});
-		for(LibraryUser u: users)
-		{
-			System.out.println(u);
-		}
+		lib.getUsers().values().stream().sorted((a,b) -> a.getLastName().compareTo(b.getLastName()))
+		        .forEach(System.out::println);
 	}
 }
